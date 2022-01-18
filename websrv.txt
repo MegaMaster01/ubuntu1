@@ -1,0 +1,38 @@
+#!/bin/bash
+# update the list of available software
+Sudo apt-get update
+# upgrade the system
+Sudo apt-get upgrade
+# install apache2
+Sudo apt-get install apache2
+# install php and other requires software
+Sudo apt install php libapache2-mod-php php-{fpm,pear,imap,apcu,intl,cgi,common,mbstring,net-socket,gd,xml-util,mysql,bcmath} -y
+# install required software "curl"
+Sudo apt-get install curl
+# start service apache2
+sudo systemctl start apache2
+# enable apache2 so it automatically starts after reboot
+sudo systemctl enable apache2
+# install open source software "osticket"
+sudo curl -s https://api.github.com/repos/osTicket/osTicket/releases/latest \
+	| grep browser_download_url \
+	| grep "browser_download_url" \
+	| cut -d '"' -f 4 \
+	| wget -i -
+# install software "unzip"
+sudo apt-get install unzip
+# unzip osticket in directory osTicket
+sudo unzip osTicket-v*.zip -d osTicket
+# verplaats directory osTicket onder de directory /var/www/html
+sudo cp -arv osTicket /var/www/html/
+# change directory to /var/www/html/osTicket/upload/include
+cd /var/www/html/osTicket/include
+# copy the file ost-sampleconfig.php to ost-config.php
+sudo cp ost-sampleconfig.php ost-config.php
+# change owner on directory /var/www to user and group www-data
+sudo chown -R www-data:www-data /var/www/
+# install software mysql-client for testing purposes
+# to test connection to the database 
+sudo apt install mysql-client-core-8.0 
+# restart service apache2 
+sudo systemctl restart apache2
